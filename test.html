@@ -64,10 +64,15 @@ For extra points, build a slideshow (carousel) instead of a static image module 
           <span>Browser Information</span>
           <span onclick="closeModal()" class="modal-close">&times;</span>
         </section>
-        <section class="modal-body">testing123</section>
+        <section class="modal-body">
+          <div id="modal-content"></div>
+        </section>
       </div>
     </div>
     <style>
+      .modal-body {
+        margin-top: 20px;
+      }
       .modal-close {
         float: right;
         font-size: 40px;
@@ -91,14 +96,17 @@ For extra points, build a slideshow (carousel) instead of a static image module 
       .modal-shell {
         animation-name: animatemodal;
         animation-duration: 0.5s;
-        padding: 10px;
+        padding: 30px;
         position: relative;
         width: 60%;
-        height: 40%;
+        max-height: 70%;
+        min-height: 40%;
         border: solid 2px;
         border-radius: 15px;
         background-color: white;
+        word-wrap: break-word;
         margin: auto;
+        overflow: auto;
       }
       .modal-container {
         display: none;
@@ -371,7 +379,48 @@ For extra points, build a slideshow (carousel) instead of a static image module 
     </div>
     <script>
       const modal = document.getElementById("modal");
+      const modalContent = document.getElementById("modal-content");
       const browserDetails = window.navigator;
+
+      const getBrowser = () => {
+        const userAgent = browserDetails.userAgent;
+        if (userAgent.includes("Firefox/")) {
+          return userAgent.match(/\Firefox\S*/)[0];
+        } else if (userAgent.includes("Edg/")) {
+          return userAgent.match(/\Edg\S*/)[0];
+        } else if (userAgent.includes("Chrome/")) {
+          return userAgent.match(/\Chrome\S*/)[0];
+        } else if (userAgent.includes("Safari/")) {
+          return userAgent.match(/\Safari\S*/)[0];
+        }
+      };
+
+      const getCookies = () => {
+        const cookies = decodeURIComponent(document.cookie);
+
+        // empty cookies has length of 0
+        if (cookies.length === 0) {
+          console.log("inside");
+          return "No Cookies found :(";
+        } else {
+          let formatedCookies = "<ol style='list-style-type: disc'>";
+          cookies.split("; ").forEach((cookie) => {
+            formatedCookies += `<li>${cookie}</li>`;
+          });
+          return (formatedCookies += "</ol>");
+        }
+      };
+
+      modalContent.innerHTML = `<div><div>Browser and Platform</div><ol style='list-style-type: disc'>
+                <li>Platform - ${browserDetails.platform}</li>
+                <li>Cookies Enabled - ${browserDetails.cookieEnabled}</li>
+                <li>Browser - ${getBrowser()}</li>
+                </ol>
+                <div>Cookies</div>
+                ${getCookies()}
+                </div>`;
+
+      console.log(modalContent);
 
       const openModal = () => {
         modal.style.display = "block";
