@@ -126,15 +126,53 @@ For extra points, build a slideshow (carousel) instead of a static image module 
         <div class="l-main-rightrail-wrap">
           <div class="l-main l-main--rightrail">
             <!-- SLIDESHOW -->
-            <section class="slideshow" style="margin-bottom: 10px">
+            <section
+              class="slideshow"
+              style="margin-bottom: 10px; position: relative"
+            >
               <div class="slideshow-body">
-                <div>
-                  <div class="placeholder">
-                    <span>SLIDESHOW/IMAGE MODULE GOES HERE</span>
-                  </div>
-                </div>
+                <img
+                  width="100%"
+                  src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Faol-releases-assets-production.s3.amazonaws.com%2Fgenerator%2FADCB7A5C.jpg&format=jpg&quality=80&thumbnail=640%2C420&client=14d356460ccd1a3da7ce&signature=5c812ec39fc2088239f30a68cb25f9af7a855acd"
+                />
+              </div>
+              <a class="previousArticle">&#10094;</a>
+              <a class="nextArticle">&#10095;</a>
+              <div class="slideshow-description">
+                <h3 class="slideshow-title">
+                  Brexit: Government may begin stockpiling medicine
+                </h3>
               </div>
               <style>
+                .previousArticle,
+                .nextArticle {
+                  top: 42%;
+                  color: white;
+                  position: absolute;
+                  font-weight: bold;
+                  user-select: none;
+                  padding: 16px;
+                  font-size: 35px;
+                  transition: 0.3s ease;
+                  cursor: pointer;
+                }
+                @media screen and (max-width: 450px) {
+                  .previousArticle,
+                  .nextArticle {
+                    font-size: 15px;
+                    top: 30%;
+                  }
+                }
+                .nextArticle {
+                  right: 0;
+                }
+                .slideshow {
+                  border: 1px solid #e0e0e0;
+                }
+                .slideshow-body,
+                .slideshow-description {
+                  text-align: center;
+                }
                 .placeholder {
                   background-color: rgba(51, 153, 255);
                   color: white;
@@ -378,6 +416,10 @@ For extra points, build a slideshow (carousel) instead of a static image module 
       </div>
     </div>
     <script>
+      fetch("https://s.yimg.com/cv/apiv2/default/20200528/test.json").then(
+        ({ data }) => console.log(data)
+      );
+
       const modal = document.getElementById("modal");
       const modalContent = document.getElementById("modal-content");
       const browserDetails = window.navigator;
@@ -412,13 +454,13 @@ For extra points, build a slideshow (carousel) instead of a static image module 
       };
 
       modalContent.innerHTML = `<div><div>Browser and Platform</div><ol style='list-style-type: disc'>
-                <li>Platform - ${browserDetails.platform}</li>
-                <li>Cookies Enabled - ${browserDetails.cookieEnabled}</li>
-                <li>Browser - ${getBrowser()}</li>
-                </ol>
-                <div>Cookies</div>
-                ${getCookies()}
-                </div>`;
+                      <li>Platform - ${browserDetails.platform}</li>
+                      <li>Cookies Enabled - ${browserDetails.cookieEnabled}</li>
+                      <li>Browser - ${getBrowser()}</li>
+                      </ol>
+                      <div>Cookies</div>
+                      ${getCookies()}
+                      </div>`;
 
       console.log(modalContent);
 
