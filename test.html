@@ -126,22 +126,27 @@ For extra points, build a slideshow (carousel) instead of a static image module 
         <div class="l-main-rightrail-wrap">
           <div class="l-main l-main--rightrail">
             <!-- SLIDESHOW -->
-            <section
-              class="slideshow"
-              style="margin-bottom: 10px; position: relative"
-            >
+            <section class="slideshow" style="margin-bottom: 10px">
               <div class="slideshow-body">
                 <img
+                  id="slideShowImage"
                   width="100%"
                   src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Faol-releases-assets-production.s3.amazonaws.com%2Fgenerator%2FADCB7A5C.jpg&format=jpg&quality=80&thumbnail=640%2C420&client=14d356460ccd1a3da7ce&signature=5c812ec39fc2088239f30a68cb25f9af7a855acd"
                 />
               </div>
-              <a class="previousArticle">&#10094;</a>
-              <a class="nextArticle">&#10095;</a>
+              <a onclick="setSlideShow('left')" class="previousArticle"
+                >&#10094;</a
+              >
+              <a onclick="setSlideShow('right')" class="nextArticle"
+                >&#10095;</a
+              >
               <div class="slideshow-description">
-                <h3 class="slideshow-title">
+                <div id="slideShowTitle" class="slideshow-title">
                   Brexit: Government may begin stockpiling medicine
-                </h3>
+                </div>
+                <div id="slideShowSummary" class="slideshow-summary">
+                  Summary: Government may begin stockpiling medicine
+                </div>
               </div>
               <style>
                 .previousArticle,
@@ -168,6 +173,7 @@ For extra points, build a slideshow (carousel) instead of a static image module 
                 }
                 .slideshow {
                   border: 1px solid #e0e0e0;
+                  position: relative;
                 }
                 .slideshow-body,
                 .slideshow-description {
@@ -416,13 +422,65 @@ For extra points, build a slideshow (carousel) instead of a static image module 
       </div>
     </div>
     <script>
-      fetch("https://s.yimg.com/cv/apiv2/default/20200528/test.json").then(
-        ({ data }) => console.log(data)
-      );
-
       const modal = document.getElementById("modal");
       const modalContent = document.getElementById("modal-content");
       const browserDetails = window.navigator;
+
+      let slideShowData = null;
+      const slideShowImage = document.getElementById("slideShowImage");
+      const slideShowTitle = document.getElementById("slideShowTitle");
+      const slideShowSummary = document.getElementById("slideShowSummary");
+      let position = 0;
+
+      const decodeHtml = (textData) => {
+        const temp = document.createElement("textarea");
+        temp.innerHTML = textData;
+        return temp.value.length > 50
+          ? `${temp.value.substring(0, 50)}...`
+          : temp.value;
+      };
+
+      const setSlideShow = (direction) => {
+        if (direction === "left") {
+          position =
+            position - 1 >= 0 ? position - 1 : slideShowData.length - 1;
+
+          slideShowTitle.innerText = decodeHtml(
+            slideShowData[position].title_a
+          );
+          slideShowSummary.innerText = decodeHtml(
+            slideShowData[position].summary
+          );
+          slideShowImage.src = slideShowData[position].image_cdn;
+        } else if (direction === "right") {
+          position =
+            position + 1 <= slideShowData.length - 1 ? position + 1 : 0;
+
+          slideShowTitle.innerText = decodeHtml(
+            slideShowData[position].title_a
+          );
+          slideShowSummary.innerText = decodeHtml(
+            slideShowData[position].summary
+          );
+          slideShowImage.src = slideShowData[position].image_cdn;
+        } else {
+          slideShowImage.src = slideShowData[position].image_cdn;
+        }
+      };
+
+      const getSlideShowData = async () => {
+        let data = await fetch(
+          "https://s.yimg.com/cv/apiv2/default/20200528/test.json"
+        );
+        data = (await data.json()).data;
+        console.log(data);
+        return data;
+      };
+
+      getSlideShowData().then((data) => {
+        slideShowData = data;
+        setSlideShow();
+      });
 
       const getBrowser = () => {
         const userAgent = browserDetails.userAgent;
