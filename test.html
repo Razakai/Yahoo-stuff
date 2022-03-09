@@ -128,11 +128,7 @@ For extra points, build a slideshow (carousel) instead of a static image module 
             <!-- SLIDESHOW -->
             <section class="slideshow" style="margin-bottom: 10px">
               <div class="slideshow-body">
-                <img
-                  id="slideShowImage"
-                  width="100%"
-                  src="https://o.aolcdn.com/images/dims?image_uri=https%3A%2F%2Faol-releases-assets-production.s3.amazonaws.com%2Fgenerator%2FADCB7A5C.jpg&format=jpg&quality=80&thumbnail=640%2C420&client=14d356460ccd1a3da7ce&signature=5c812ec39fc2088239f30a68cb25f9af7a855acd"
-                />
+                <img id="slideShowImage" width="100%" />
               </div>
               <a onclick="setSlideShow('left')" class="previousArticle"
                 >&#10094;</a
@@ -141,12 +137,8 @@ For extra points, build a slideshow (carousel) instead of a static image module 
                 >&#10095;</a
               >
               <div class="slideshow-description">
-                <div id="slideShowTitle" class="slideshow-title">
-                  Brexit: Government may begin stockpiling medicine
-                </div>
-                <div id="slideShowSummary" class="slideshow-summary">
-                  Summary: Government may begin stockpiling medicine
-                </div>
+                <div id="slideShowTitle" class="slideshow-title"></div>
+                <div id="slideShowSummary" class="slideshow-summary"></div>
               </div>
               <style>
                 .previousArticle,
@@ -175,8 +167,45 @@ For extra points, build a slideshow (carousel) instead of a static image module 
                   border: 1px solid #e0e0e0;
                   position: relative;
                 }
-                .slideshow-body,
                 .slideshow-description {
+                  padding: 20px;
+                  background-color: rgba(0, 0, 0, 0.7);
+                  position: absolute;
+                  top: 80%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                }
+                @media screen and (max-width: 1200px) {
+                  div.slideshow-title {
+                    font-size: 1.5em;
+                  }
+                  div.slideshow-summary {
+                    font-size: 0.8em;
+                  }
+                }
+                @media screen and (max-width: 600px) {
+                  div.slideshow-title {
+                    font-size: 0.8em;
+                  }
+                  div.slideshow-summary {
+                    font-size: 0.5em;
+                  }
+                }
+                .slideshow-title {
+                  font-weight: bold;
+                  font-size: 2em;
+                  color: #ffffff;
+                  overflow-wrap: break-word;
+                }
+
+                .slideshow-summary {
+                  font-weight: bold;
+                  font-size: 1em;
+                  color: #ffffff;
+                  overflow-wrap: break-word;
+                }
+                .slideshow-body
+                /*.slideshow-description*/ {
                   text-align: center;
                 }
                 .placeholder {
@@ -436,7 +465,7 @@ For extra points, build a slideshow (carousel) instead of a static image module 
         const temp = document.createElement("textarea");
         temp.innerHTML = textData;
         return temp.value.length > 50
-          ? `${temp.value.substring(0, 50)}...`
+          ? `${temp.value.substring(0, 50).trim()}...`
           : temp.value;
       };
 
@@ -464,6 +493,12 @@ For extra points, build a slideshow (carousel) instead of a static image module 
           );
           slideShowImage.src = slideShowData[position].image_cdn;
         } else {
+          slideShowTitle.innerText = decodeHtml(
+            slideShowData[position].title_a
+          );
+          slideShowSummary.innerText = decodeHtml(
+            slideShowData[position].summary
+          );
           slideShowImage.src = slideShowData[position].image_cdn;
         }
       };
